@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 
 import assets.framework as frwk
 
@@ -13,7 +12,7 @@ framerate = 60
 monitor_size = [pygame.display.Info().current_w, pygame.display.Info().current_h]
 
 # Create windows.
-pygame.display.set_caption('Snak3: Classic')
+pygame.display.set_caption('Snak3 Classique')
 pygame.display.set_icon(pygame.image.load('assets/images/snak3.png'))
 screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 ws = [screen.get_width(), screen.get_height()]  # Window Size.

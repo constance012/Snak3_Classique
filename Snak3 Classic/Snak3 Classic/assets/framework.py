@@ -115,7 +115,8 @@ class Main_System:
 		self.retry_flag = False
 		self.res_w = 800
 		self.res_h = 600
-		self.high_score = 0
+		self.old_high_score = 0
+		self.current_high_score = 0
 		self.game_mode = 0
 		self.move_speed = 20
 		self.segment_size = 20
@@ -147,7 +148,8 @@ class Main_System:
 					self.fllscrn_flag = line.split()[-1] == "true"
 
 				elif "high score" in line:
-					self.high_score = int(line.split()[-1])
+					self.current_high_score = int(line.split()[-1])
+					self.old_high_score = self.current_high_score
 
 			print("\nRead file successfully.")
 	
@@ -164,7 +166,7 @@ class Main_System:
 			f.write(f'Music = {self.music_flag}\n')
 			f.write(f'Resolution = {self.res_w} x {self.res_h}\n')
 			f.write(f'Fullscreen = {self.fllscrn_flag}\n')
-			f.write(f'High Score = {self.high_score}')
+			f.write(f'High Score = {self.current_high_score}')
 	
 		except IOError:
 			print('An error occurred while writing to the file.')
@@ -248,20 +250,20 @@ class Main_System:
 					pygame.quit()
 					sys.exit()
 				if event.type == KEYDOWN:
-					if event.key == K_ESCAPE:
+					if event.key == K_ESCAPE or event.key == K_p:
 						self.pause_menu()
 						# running = False  # Ấn escape sẽ trở về menu
-					if event.key == K_d:
+					if event.key == K_d or event.key == K_RIGHT:
 						change_to = 'RIGHT'
-					if event.key == K_a:
+					if event.key == K_a or event.key == K_LEFT:
 						change_to = 'LEFT'
-					if event.key == K_w:
+					if event.key == K_w or event.key == K_UP:
 						change_to = 'UP'
-					if event.key == K_s:
+					if event.key == K_s or event.key == K_DOWN:
 						change_to = 'DOWN'
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			# Change direction, avoid reversing movement.
@@ -312,8 +314,8 @@ class Main_System:
 				snake_body.pop()
 
 			# If the current score is higher than the previous best, then update it.
-			if score > self.high_score:
-				self.high_score = score
+			if score > self.current_high_score:
+				self.current_high_score = score
 				self.save_data('user_data/user_config.txt')
 
 			# Regenerate new food if eaten:
@@ -509,13 +511,13 @@ class Main_System:
 		self.read_data("user_data/user_config.txt")
 		print("\nFullscreen: ", self.fllscrn_flag)
 		print("Music: ", self.music_flag)
-		print("High score: ", self.high_score)
+		print("Saved high score: ", self.old_high_score)
 
 		if self.fllscrn_flag:
-			self.screen = pygame.display.set_mode(self.monitor_size, pygame.FULLSCREEN)
+			self.screen = pygame.display.set_mode(self.monitor_size, FULLSCREEN)
 			self.ws = [self.screen.get_width(), self.screen.get_height()]
 		else:
-			self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+			self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 			self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 		if self.music_flag:
@@ -532,8 +534,8 @@ class Main_System:
 			mx, my = pygame.mouse.get_pos()
 
 			# Tiêu đề:
-			util.draw_text('SNAK3 CLASSIC', self.ws[0] / 2, self.ws[1] / 6, 70, self.screen, bold=True)
-			util.draw_text('--------------------', self.ws[0] / 2, self.ws[1] / 4, 30, self.screen, bold=True)
+			util.draw_text('SNAK3 CLASSIQUE', self.ws[0] / 2, self.ws[1] / 6, 70, self.screen, bold=True, font_name="calibri")
+			util.draw_text('--------------------', self.ws[0] / 2, self.ws[1] / 4, 30, self.screen, bold=True, font_name="calibri")
 
 			# Nút bấm:
 			button_1 = pygame.Rect(300, 240, 270, 50)
@@ -613,7 +615,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -630,7 +632,7 @@ class Main_System:
 
 			mx ,my = pygame.mouse.get_pos()
 
-			util.draw_text('SETTINGS', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True)
+			util.draw_text('SETTINGS', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True, font_name="calibri")
 
 			button_1 = pygame.Rect(200,340,200,50)
 			util.draw_rect(button_1, self.screen, GREY, self.ws[0]/2, self.ws[1]/5*2)
@@ -717,7 +719,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 		
 			pygame.display.update()
@@ -735,7 +737,7 @@ class Main_System:
 			self.screen.fill(WHITE)
 			mx, my = pygame.mouse.get_pos()
 
-			util.draw_text('CONTROLS', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True)
+			util.draw_text('CONTROLS', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True, font_name="calibri")
 
 			util.draw_text('W: Up', self.ws[0]/2, self.ws[1]/60*17, 30, self.screen)
 			util.draw_text('S: Down', self.ws[0]/2, self.ws[1]/20*7, 30, self.screen)
@@ -783,7 +785,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -799,7 +801,7 @@ class Main_System:
 			self.screen.fill(WHITE)
 			mx,my = pygame.mouse.get_pos()
 
-			util.draw_text('RESOLUTION', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True)
+			util.draw_text('RESOLUTION', self.ws[0]/2, self.ws[1]/6, 70, self.screen, bold=True, font_name="calibri")
 
 			if not self.fllscrn_flag:
 				button_1 = pygame.Rect(200,340,200,50)
@@ -820,7 +822,7 @@ class Main_System:
 					if click:
 						self.res_w = 800
 						self.res_h = 600
-						self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
 
@@ -843,7 +845,7 @@ class Main_System:
 					if click:
 						self.res_w = 1152
 						self.res_h = 864
-						self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
 
@@ -866,7 +868,7 @@ class Main_System:
 					if click:
 						self.res_w = 1366
 						self.res_h = 768
-						self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
 
@@ -889,7 +891,7 @@ class Main_System:
 					if click:
 						self.res_w = 1600
 						self.res_h = 900
-						self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
 
@@ -923,7 +925,11 @@ class Main_System:
 				util.draw_text('Fullsreen', self.ws[0]/2, self.ws[1]/60*43, 30, self.screen)
 
 			if button_5.collidepoint((mx,my)):
-				if not self.fllscrn_flag:
+				if self.fllscrn_flag:
+					util.draw_rect(button_5, self.screen, BLACK, self.ws[0]/2, self.ws[1]/10*7)
+					util.draw_text('Fullsreen', self.ws[0]/2, self.ws[1]/60*43, 30, self.screen, color=YELLOW)
+
+				else:
 					util.draw_rect(button_5, self.screen, MEDIUM_GREY, self.ws[0]/2, self.ws[1]/10*7)
 					util.draw_text('Fullsreen', self.ws[0]/2, self.ws[1]/60*43, 30, self.screen, color=YELLOW)
 
@@ -931,11 +937,11 @@ class Main_System:
 					self.fllscrn_flag = not self.fllscrn_flag
 				
 					if self.fllscrn_flag:
-						self.screen = pygame.display.set_mode(self.monitor_size, pygame.FULLSCREEN)
+						self.screen = pygame.display.set_mode(self.monitor_size, FULLSCREEN)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 					else:
-						self.screen = pygame.display.set_mode((self.res_w, self.res_h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 				
 					self.save_data('user_data/user_config.txt')
@@ -982,7 +988,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -1001,7 +1007,7 @@ class Main_System:
 		while running:
 			mx, my = pygame.mouse.get_pos()
 
-			util.draw_text('PAUSED', self.ws[0]/2, self.ws[1]/3, 70, self.screen, color=RED, bold=True)
+			util.draw_text('PAUSED', self.ws[0]/2, self.ws[1]/10*3, 70, self.screen, color=RED, bold=True, font_name="calibri")
 
 			button_1 = pygame.Rect(0,0,250,50)
 			util.draw_rect(button_1, self.screen, GREY, self.ws[0]/2, self.ws[1]/2)
@@ -1028,15 +1034,19 @@ class Main_System:
 				if event.type == QUIT:
 					pygame.quit()
 					sys.exit()
+
+				# Unpause.
 				if event.type == KEYDOWN:
-					if event.key == K_ESCAPE:
+					if event.key == K_ESCAPE or event.key == K_p:
 						running = False
+				
 				if event.type == MOUSEBUTTONDOWN:
 					if event.button == 1:
 						click = True
+				
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						surf = pygame.Surface(tuple(self.ws))
 						surf.fill(GREY)
@@ -1059,7 +1069,7 @@ class Main_System:
 			mx, my = pygame.mouse.get_pos()
 
 			self.screen.fill(WHITE)
-			util.draw_text('GAME OVER', self.ws[0]/2, self.ws[1]/6, 70, self.screen, color=RED, bold=True)
+			util.draw_text('GAME OVER', self.ws[0]/2, self.ws[1]/6, 70, self.screen, color=RED, bold=True, font_name="calibri")
 			self.show_score(0, score) #Hiển thị điểm
 
 			button_1 = pygame.Rect(0,0,250,50)
@@ -1095,7 +1105,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -1107,14 +1117,17 @@ class Main_System:
 		# In game.
 		if choice == 1:
 			util.draw_text(f'Score: {score}', 70, 20, 15, self.screen)
-			util.draw_text(f'High Score: {self.high_score}', self.ws[0]-100, 20, 15, self.screen)
+			if score > self.old_high_score:
+				util.draw_text(f'New High Score: {self.current_high_score}', self.ws[0]-100, 20, 15, self.screen, color=RED)
+			else:
+				util.draw_text(f'High Score: {self.current_high_score}', self.ws[0]-100, 20, 15, self.screen)
 		
 		# In game over screen.
 		else:
-			if score == self.high_score:
-				text_rect = util.draw_text(f'New High Score: {self.high_score}', self.ws[0]/2, self.ws[1]/12*5, 25, self.screen, color=RED)
+			if score > self.old_high_score:
+				text_rect = util.draw_text(f'New High Score: {self.current_high_score}', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=RED)
 				self.visual_fx.particles_generate(text_rect.midleft[0], text_rect.midleft[1])
 				self.visual_fx.particles_generate(text_rect.midright[0], text_rect.midright[1])
 			else:
-				util.draw_text(f'High Score: {self.high_score}', self.ws[0]/2, self.ws[1]/12*5, 25, self.screen)
-			util.draw_text(f'Current Score: {score}', self.ws[0]/2, self.ws[1]/15*7, 20, self.screen)
+				util.draw_text(f'High Score: {self.current_high_score}', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen)
+			util.draw_text(f'Current Score: {score}', self.ws[0]/2, self.ws[1]/100*48, 23, self.screen)
