@@ -180,6 +180,7 @@ class Main_System:
 		snake_pos = [100, 60]  # Head position.
 		snake_body = [[100, 60], [80, 60], [60, 60]] # Position of each segments.
 
+
 		# Food raw position.
 		food_x = random.randrange(2, int(self.ws[0] / 10 - 3))
 		food_y = random.randrange(3, int(self.ws[1] / 10 - 3))
@@ -191,6 +192,7 @@ class Main_System:
 		
 		food_pos = [food_x * 10, food_y * 10]  # Food actual position.
 		food_available = True
+
 
 		# Boost raw position.
 		boost_x = random.randrange(2, int(self.ws[0] / 10 - 3))
@@ -210,11 +212,6 @@ class Main_System:
 		boost_pos = [boost_x * 10, boost_y * 10]  # Boost actual position.
 		boost_available = True
 
-		direction = 'RIGHT'  # Starting direction.
-		change_to = direction  # New direction.
-		score = 0
-		apple_count = 0  # Checking when the boost will respawn.
-		
 		# Index for the type of boost: 0 for score x5, 1 for speed x1.5
 		index = random.randint(0, 1)
 		if index == 0:
@@ -222,9 +219,71 @@ class Main_System:
 		elif index == 1:
 			boost_duration = 113
 
+
+		direction = 'RIGHT'  # Starting direction.
+		change_to = direction  # New direction.
+		score = 0
+		apple_count = 0  # Checking when the boost will respawn.	
+
 		self.retry_flag = self.return_menu_flag = False
 		self.visual_fx.clear()
 
+
+		# Restart game nested function.
+		def restart_game():
+			nonlocal snake_pos, snake_body, score, apple_count, direction, change_to, boost_available, boost_duration
+			
+			self.visual_fx.clear()
+			
+			snake_pos = [100, 60]
+			snake_body = [[100, 60], [80, 60], [60, 60]]
+			score = 0
+			apple_count = 0
+			direction = 'RIGHT'
+			change_to = direction
+			boost_available = True
+			index = random.randint(0, 1)
+			
+			if index == 0:
+				boost_duration = 75
+			else:
+				boost_duration = 113
+
+
+			nonlocal food_x, food_y, food_pos, boost_x, boost_y, boost_pos
+			
+
+			# Make a new boost position.
+			food_x = random.randrange(2, int(self.ws[0] / 10 - 3))
+			food_y = random.randrange(3, int(self.ws[1] / 10 - 3))
+			if food_x % 2 != 0:
+				food_x += 1  # If it's odd, then increment by 1.
+		
+			if food_y % 2 != 0:
+				food_y += 1
+		
+			food_pos = [food_x * 10, food_y * 10]  # Food actual position.
+			
+
+			# Make a new boost position.
+			boost_x = random.randrange(2, int(self.ws[0] / 10 - 3))
+			boost_y = random.randrange(3, int(self.ws[1] / 10 - 3))
+			if boost_x % 2 != 0:
+				boost_x += 1  # If it's odd, then increment by 1.
+		
+			if boost_y % 2 != 0:
+				boost_y += 1
+		
+			# If the boost overlap the food, then move the boost over.
+			if boost_x == food_x and boost_y == food_y:
+				boost_x += 20
+				if boost_x == self.ws[0] - 30:
+					boost_x -= 20
+
+			boost_pos = [boost_x * 10, boost_y * 10]  # Boost actual position.
+		
+
+		
 		running = True
 		# Update loop:
 		while running:
@@ -413,19 +472,7 @@ class Main_System:
 						
 						# Restart if needed.
 						if self.retry_flag:
-							self.visual_fx.clear()
-							snake_pos = [100, 60]
-							snake_body = [[100, 60], [80, 60], [60, 60]]
-							score = 0
-							apple_count = 0
-							direction = 'RIGHT'
-							change_to = direction
-							boost_available = True
-							index = random.randint(0, 1)
-							if index == 0:
-								boost_duration = 75
-							else:
-								boost_duration = 113
+							restart_game()
 						
 						else:
 							running = False
@@ -437,18 +484,7 @@ class Main_System:
 						self.game_over(score)
 					
 						if self.retry_flag:
-							self.visual_fx.clear()
-							snake_pos = [100, 60]
-							snake_body = [[100, 60], [80, 60], [60, 60]]
-							score = 0
-							direction = 'RIGHT'
-							change_to = direction
-							boost_available = True
-							index = random.randint(0, 1)
-							if index == 0:
-								boost_duration = 75
-							else:
-								boost_duration = 113
+							restart_game()
 						
 						else:
 							running = False;
@@ -478,18 +514,7 @@ class Main_System:
 					
 					# Restart if needed.
 					if self.retry_flag:
-						self.visual_fx.clear()
-						snake_pos = [100, 60]
-						snake_body = [[100, 60], [80, 60], [60, 60]]
-						score = 0
-						direction = 'RIGHT'
-						change_to = direction
-						boost_available = True
-						index = random.randint(0, 1)
-						if index == 0:
-							boost_duration = 75
-						else:
-							boost_duration = 113
+						restart_game()
 					
 					else:
 						running = False
