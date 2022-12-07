@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Snak3 Classic", "Snak3 Classic\Snak3 Classic.pyproj", "{609C3A59-7710-4092-A90F-52F8652CF027}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Main", "Main\Main.pyproj", "{609C3A59-7710-4092-A90F-52F8652CF027}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
