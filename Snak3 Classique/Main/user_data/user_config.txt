@@ -1,4 +1,4 @@
 Music = True
 Resolution = 800 x 600
 Fullscreen = False
-High Score = 44
+High Score = 7

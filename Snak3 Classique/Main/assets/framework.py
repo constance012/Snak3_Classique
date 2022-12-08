@@ -150,8 +150,8 @@ class Main_System:
 					self.fllscrn_flag = line.split()[-1] == "true"
 
 				elif "high score" in line:
-					self.current_high_score = int(line.split()[-1])
-					self.old_high_score = self.current_high_score
+					self.old_high_score = int(line.split()[-1])
+					self.current_high_score = self.old_high_score
 
 			print("\nRead file successfully.")
 	
@@ -227,6 +227,7 @@ class Main_System:
 		score: int = 0
 		apple_count: int = 0  # Checking when the boost will respawn.	
 
+		self.old_high_score = self.current_high_score
 		self.retry_flag = self.return_menu_flag = False
 		self.visual_fx.clear()
 
@@ -239,6 +240,7 @@ class Main_System:
 			
 			snake_pos = [100, 60]
 			snake_body = [[100, 60], [80, 60], [60, 60]]
+			self.old_high_score = score
 			score = 0
 			apple_count = 0
 			direction = 'RIGHT'
@@ -292,18 +294,7 @@ class Main_System:
 			# Return to menu if an exit flag is raised.
 			if self.return_menu_flag:
 				running = False
-				util.fade_out(tuple(self.ws), self.screen)
-			
-			# If contact with the boost.
-			if snake_pos[0] == boost_pos[0] and snake_pos[1] == boost_pos[1]:
-				self.visual_fx.clear()
-				if boost_available:
-					boost_sound.play()
-					boost_available = False
-
-			# If the boost is active, then decrease its duration
-			if not boost_available:
-				boost_duration -= 1
+				util.fade_out(tuple(self.ws), self.screen)		
 
 			# Events Handling.
 			for event in pygame.event.get():
@@ -337,7 +328,7 @@ class Main_System:
 			if change_to == 'DOWN' and direction != 'UP':
 				direction = 'DOWN'
 
-			# Head rotate angle, position number is counter-clockwise, negative number is clockwise.
+			# Head's rotation angle, positive number is counter-clockwise, negative number is clockwise.
 			# Default direction facing right horizontally.
 			angle = 0
 			# Update snake position overtime.
@@ -374,8 +365,19 @@ class Main_System:
 			else:
 				snake_body.pop()
 
+			# If contact with the boost.
+			if snake_pos[0] == boost_pos[0] and snake_pos[1] == boost_pos[1]:
+				self.visual_fx.clear()
+				if boost_available:
+					boost_sound.play()
+					boost_available = False
+
+			# If the boost is active, then decrease its duration
+			if not boost_available:
+				boost_duration -= 1
+
 			# If the current score is higher than the previous best, then update it.
-			if score > self.current_high_score:
+			if score > self.old_high_score:
 				self.current_high_score = score
 				self.save_data('user_data/user_config.txt')
 
@@ -540,7 +542,7 @@ class Main_System:
 		print("\nFullscreen: ", self.fllscrn_flag)
 		print("Music: ", self.music_flag)
 		print("Saved high score: ", self.old_high_score)
-
+		
 		if self.fllscrn_flag:
 			self.screen = pygame.display.set_mode(self.monitor_size, FULLSCREEN)
 			self.ws = [self.screen.get_width(), self.screen.get_height()]
@@ -555,25 +557,24 @@ class Main_System:
 		alpha = 0  # Alpha value for transparent effect
 
 		while True:
-			# Lắp đầy màn hình bằng màu trằng
 			self.screen.fill(WHITE)
 
-			# Lấy vị trí của chuột:
+			# Get current cursor position.
 			mx, my = pygame.mouse.get_pos()
 
-			# Tiêu đề:
+			# Draw the title.
 			util.draw_text('SNAK3 CLASSIQUE', self.ws[0] / 2, self.ws[1] / 6, 70, self.screen, bold=True, font_name="calibri")
 			util.draw_text('--------------------', self.ws[0] / 2, self.ws[1] / 4, 30, self.screen, bold=True, font_name="calibri")
 
-			# Nút bấm:
+			# Draw buttons.
 			button_1 = pygame.Rect(300, 240, 270, 50)
 			util.draw_rect(button_1, self.screen, GREY, self.ws[0] / 2, self.ws[1] / 5 * 2)
 			util.draw_text('Casual Mode', self.ws[0] / 2, self.ws[1] / 12 * 5, 30, self.screen)
 		
-			if button_1.collidepoint((mx, my)):  # Khi dí trỏ chuột vào
+			if button_1.collidepoint((mx, my)):  # If the cursor is hovering above the button.
 				util.draw_rect(button_1, self.screen, MEDIUM_GREY, self.ws[0] / 2, self.ws[1] / 5 * 2)
 				util.draw_text('Casual Mode', self.ws[0] / 2, self.ws[1] / 12 * 5, 30, self.screen, color=YELLOW)
-				if click:  # Khi bấm chuột vào
+				if click:  # If clicked.
 					util.fade_out(tuple(self.ws), self.screen)
 					self.game_mode = 0
 					self.start_game()
@@ -627,7 +628,7 @@ class Main_System:
 				if alpha == 255:
 					fade_in = pygame.Surface(tuple(self.ws))
 					fade_in.fill(WHITE)
-					self.visual_fx.clear()  # Reset the shockwaves list
+					self.visual_fx.clear()
 
 				fade_in.set_alpha(alpha)
 				self.screen.blit(fade_in, (0, 0))
@@ -639,7 +640,7 @@ class Main_System:
 					pygame.quit()
 					sys.exit()
 				if event.type == MOUSEBUTTONDOWN:
-					if event.button == 1:  # Khi bấm chuột trái
+					if event.button == 1:  # When the LMB is clicked.
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
@@ -1150,7 +1151,7 @@ class Main_System:
 			else:
 				util.draw_text(f'High Score: {self.current_high_score}', self.ws[0]-100, 20, 15, self.screen)
 		
-		# In game over screen.
+		# In Game Over screen.
 		else:
 			if score > self.old_high_score:
 				text_rect = util.draw_text(f'New High Score: {self.current_high_score}', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=RED)
