@@ -4,14 +4,12 @@ from pygame.locals import *
 import sys
 import random
 
-sys.path.append('../')
+sys.path.append('V:/Python Programming/Pygame/Snak3 Classique/Snak3 Classique/Main/assets/')
 
-import assets.utility_funcs as util
+import utility_funcs as util
 
-pygame.init()
 pygame.mixer.pre_init(44100, -16, 2, 512)
-pygame.mixer.music.load('assets/musics/Blues.ogg')
-pygame.mixer.music.set_volume(0.5)
+pygame.init()
 
 # Colors.
 WHITE = (255, 255, 255)
@@ -33,6 +31,9 @@ boost_img = [pygame.transform.scale(pygame.image.load('assets/images/score_boost
 			pygame.transform.scale(pygame.image.load('assets/images/speed_boost.png'), (size, size))]
 
 # Sounds and music.
+pygame.mixer.music.load('assets/musics/Blues.ogg')
+pygame.mixer.music.set_volume(0.5)
+
 eating_sound = pygame.mixer.Sound('assets/sounds/eating.wav')
 boost_sound = pygame.mixer.Sound('assets/sounds/boost.wav')
 boost_sound.set_volume(0.5)
@@ -48,9 +49,9 @@ class Effect:
 	def __init__(self, surf, color = BLACK):
 		self.sw_list = []
 		self.particles_list = []
-		self.surf = surf
-		self.color = color
-		self.delay = 0
+		self.surf: pygame.Surface = surf
+		self.color: tuple = color
+		self.delay: float = 0
 
 	# Shockwaves effect.
 	def shockwaves_generate(self, x, y, click_flag=False, auto=False, duration=5):
@@ -111,21 +112,21 @@ class Effect:
 class Main_System:
 
 	def __init__(self, main_screen, windows_size, monitor_size, fps_clock, framerate = 60):
-		self.music_flag = False
-		self.fllscrn_flag = False
-		self.return_menu_flag = False
-		self.retry_flag = False
-		self.res_w = 800
-		self.res_h = 600
-		self.old_high_score = 0
-		self.current_high_score = 0
-		self.game_mode = 0
-		self.move_speed = 20
-		self.monitor_size = monitor_size
-		self.screen = main_screen
-		self.ws = windows_size
-		self.clock = fps_clock
-		self.framerate = framerate
+		self.music_flag: bool = False
+		self.fllscrn_flag: bool = False
+		self.return_menu_flag: bool = False
+		self.retry_flag: bool = False
+		self.res_w: int = 800
+		self.res_h: int = 600
+		self.old_high_score: int = 0
+		self.current_high_score: int = 0
+		self.game_mode: int = 0
+		self.move_speed: int = 20
+		self.monitor_size: list = monitor_size
+		self.screen: pygame.Surface = main_screen
+		self.ws: list = windows_size
+		self.clock: pygame.time.Clock = fps_clock
+		self.framerate: int = framerate
 		self.visual_fx = Effect(self.screen)
 
 	# Read from file.
@@ -192,7 +193,7 @@ class Main_System:
 			food_y += 1
 		
 		food_pos = [food_x * 10, food_y * 10]  # Food actual position.
-		food_available = True
+		food_available: bool = True
 
 
 		# Boost raw position.
@@ -211,20 +212,20 @@ class Main_System:
 				boost_x -= 20
 		
 		boost_pos = [boost_x * 10, boost_y * 10]  # Boost actual position.
-		boost_available = True
+		boost_available: bool = True
 
 		# Index for the type of boost: 0 for score x5, 1 for speed x1.5
 		index = random.randint(0, 1)
 		if index == 0:
-			boost_duration = 75
+			boost_duration: int = 75
 		elif index == 1:
-			boost_duration = 113
+			boost_duration: int = 113
 
 
-		direction = 'RIGHT'  # Starting direction.
-		change_to = direction  # New direction.
-		score = 0
-		apple_count = 0  # Checking when the boost will respawn.	
+		direction: str = 'RIGHT'  # Starting direction.
+		change_to: str = direction  # New direction.
+		score: int = 0
+		apple_count: int = 0  # Checking when the boost will respawn.	
 
 		self.retry_flag = self.return_menu_flag = False
 		self.visual_fx.clear()
@@ -534,6 +535,7 @@ class Main_System:
 
 	# Main Menu:
 	def main_menu(self):
+		print(sys.path, end="\n\n")
 		self.read_data("user_data/user_config.txt")
 		print("\nFullscreen: ", self.fllscrn_flag)
 		print("Music: ", self.music_flag)
