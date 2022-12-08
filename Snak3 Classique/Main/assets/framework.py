@@ -23,12 +23,14 @@ RED = (255, 0, 0)
 BLUE = (65, 105, 255)
 YELLOW = (224, 208, 31)
 
+size = 20
+
 # Images.
-head_img = pygame.transform.scale(pygame.image.load('assets/images/head.png'), (20, 20))
-body_img = pygame.transform.scale(pygame.image.load('assets/images/body.png'), (20, 20))
-food_img = pygame.transform.scale(pygame.image.load('assets/images/food.png'), (20, 20))
-boost_img = [pygame.transform.scale(pygame.image.load('assets/images/score_boost.png'), (20, 20)),
-			pygame.transform.scale(pygame.image.load('assets/images/speed_boost.png'), (20, 20))]
+head_img = pygame.transform.scale(pygame.image.load('assets/images/head.png'), (size, size))
+body_img = pygame.transform.scale(pygame.image.load('assets/images/body.png'), (size, size))
+food_img = pygame.transform.scale(pygame.image.load('assets/images/food.png'), (size, size))
+boost_img = [pygame.transform.scale(pygame.image.load('assets/images/score_boost.png'), (size, size)),
+			pygame.transform.scale(pygame.image.load('assets/images/speed_boost.png'), (size, size))]
 
 # Sounds and music.
 eating_sound = pygame.mixer.Sound('assets/sounds/eating.wav')
@@ -119,7 +121,6 @@ class Main_System:
 		self.current_high_score = 0
 		self.game_mode = 0
 		self.move_speed = 20
-		self.segment_size = 20
 		self.monitor_size = monitor_size
 		self.screen = main_screen
 		self.ws = windows_size
@@ -855,21 +856,21 @@ class Main_System:
 				button_2 = pygame.Rect(200,340,200,50)
 				util.draw_rect(button_2, self.screen, GREY, self.ws[0]/2, self.ws[1]/5*2)
 				
-				if self.res_w == 1152 and self.res_h == 864:
+				if self.res_w == 1160 and self.res_h == 860:
 					util.draw_rect(button_2, self.screen, YELLOW, self.ws[0]/2, self.ws[1]/5*2)
-					util.draw_text('1152 x 864', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen)
+					util.draw_text('1160 x 860', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen)
 				
 				else:
-					util.draw_text('1152 x 864', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen)
+					util.draw_text('1160 x 860', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen)
 				
 				if button_2.collidepoint((mx,my)):
-					if self.res_w != 1152 and self.res_h != 864:
+					if self.res_w != 1160 and self.res_h != 860:
 						util.draw_rect(button_2, self.screen, MEDIUM_GREY, self.ws[0]/2, self.ws[1]/5*2)
-						util.draw_text('1152 x 864', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=YELLOW)
+						util.draw_text('1160 x 860', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=YELLOW)
 					
 					if click:
-						self.res_w = 1152
-						self.res_h = 864
+						self.res_w = 1160
+						self.res_h = 860
 						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
@@ -878,21 +879,21 @@ class Main_System:
 				button_3 = pygame.Rect(200,340,200,50)
 				util.draw_rect(button_3, self.screen, GREY, self.ws[0]/2, self.ws[1]/2)
 				
-				if self.res_w == 1366 and self.res_h == 768:
+				if self.res_w == 1340 and self.res_h == 740:
 					util.draw_rect(button_3, self.screen, YELLOW, self.ws[0]/2, self.ws[1]/2)
-					util.draw_text('1366 x 768', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen)
+					util.draw_text('1340 x 740', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen)
 				
 				else:
-					util.draw_text('1366 x 768', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen)
+					util.draw_text('1340 x 740', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen)
 				
 				if button_3.collidepoint((mx,my)):
-					if self.res_w != 1366 and self.res_h != 768:
+					if self.res_w != 1340 and self.res_h != 740:
 						util.draw_rect(button_3, self.screen, MEDIUM_GREY, self.ws[0]/2, self.ws[1]/2)
-						util.draw_text('1366 x 768', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen, color=YELLOW)
+						util.draw_text('1340 x 740', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen, color=YELLOW)
 					
 					if click:
-						self.res_w = 1366
-						self.res_h = 768
+						self.res_w = 1340
+						self.res_h = 740
 						self.screen = pygame.display.set_mode((self.res_w, self.res_h), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						self.save_data('user_data/user_config.txt')
@@ -928,11 +929,11 @@ class Main_System:
 
 				button_2 = pygame.Rect(200,340,200,50)
 				util.draw_rect(button_2, self.screen, LIGHT_GREY, self.ws[0]/2, self.ws[1]/5*2)
-				util.draw_text('1152 x 864', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=GREY)
+				util.draw_text('1160 x 860', self.ws[0]/2, self.ws[1]/12*5, 30, self.screen, color=GREY)
 
 				button_3 = pygame.Rect(200,340,200,50)
 				util.draw_rect(button_3, self.screen, LIGHT_GREY, self.ws[0]/2, self.ws[1]/2)
-				util.draw_text('1366 x 768', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen, color=GREY)
+				util.draw_text('1340 x 740', self.ws[0]/2, self.ws[1]/60*31, 30, self.screen, color=GREY)
 
 				button_4 = pygame.Rect(200,340,200,50)
 				util.draw_rect(button_4, self.screen, LIGHT_GREY, self.ws[0]/2, self.ws[1]/5*3)
