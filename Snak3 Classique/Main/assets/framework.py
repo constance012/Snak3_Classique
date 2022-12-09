@@ -4,7 +4,8 @@ from pygame.locals import *
 import sys
 import random
 
-sys.path.append('V:/Python Programming/Pygame/Snak3 Classique/Snak3 Classique/Main/assets/')
+import os
+sys.path.append(os.getcwd() + "\\assets\\")
 
 import utility_funcs as util
 
@@ -240,7 +241,7 @@ class Main_System:
 			
 			snake_pos = [100, 60]
 			snake_body = [[100, 60], [80, 60], [60, 60]]
-			self.old_high_score = score
+			self.old_high_score = self.current_high_score
 			score = 0
 			apple_count = 0
 			direction = 'RIGHT'
@@ -315,7 +316,8 @@ class Main_System:
 						change_to = 'DOWN'
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						# Make sure the resized window's size is divisible by the matrix's cell size.
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			# Change direction, avoid reversing movement.
@@ -644,7 +646,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -748,7 +750,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 		
 			pygame.display.update()
@@ -814,7 +816,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -1017,7 +1019,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
@@ -1075,7 +1077,7 @@ class Main_System:
 				
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 						surf = pygame.Surface(tuple(self.ws))
 						surf.fill(GREY)
@@ -1134,7 +1136,7 @@ class Main_System:
 						click = True
 				if event.type == VIDEORESIZE:
 					if not self.fllscrn_flag:
-						self.screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+						self.screen = pygame.display.set_mode((event.w - (event.w % size), event.h - (event.h % size)), RESIZABLE)
 						self.ws = [self.screen.get_width(), self.screen.get_height()]
 
 			pygame.display.update()
